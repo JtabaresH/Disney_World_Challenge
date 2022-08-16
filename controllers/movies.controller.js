@@ -29,7 +29,7 @@ const getAllMovies = catchAsync(async (req, res, next) => {
 
 const getMovieByName = catchAsync(async (req, res, next) => {
   const { name } = req.query;
-
+  
   const movieByName = await Movie.findOne({
     where: { title: name },
     attributes: ['id', 'image', 'title', 'creationDate', 'score'],
@@ -41,6 +41,10 @@ const getMovieByName = catchAsync(async (req, res, next) => {
       },
     ],
   });
+
+  if(!movieByName){
+    return next(new AppError('Movie not found', 404));
+  }
 
   res.status(201).json({
     status: 'success',

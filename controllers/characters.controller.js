@@ -35,6 +35,10 @@ const getCharacterByName = catchAsync(async (req, res, next) => {
     ],
   });
 
+  if(!characterByName){
+    return next(new AppError('Character not found', 404))
+  }
+
   res.status(201).json({
     status: 'success',
     characterByName,
@@ -56,6 +60,10 @@ const getCharacterByAge = catchAsync(async (req, res, next) => {
     ],
   });
 
+  if(!characterByAge){
+    return next(new AppError('Character not found', 404))
+  }
+
   res.status(201).json({
     status: 'success',
     characterByAge,
@@ -75,11 +83,19 @@ const getCharacterByMovie = catchAsync(async (req, res, next) => {
     ],
   });
 
+  if(movieByName === null){
+    return next(new AppError('Movie not found', 404));
+  }
+
   const characters = [];
 
   movieByName.characters.map((character) => {
     characters.push(character.name);
   });
+
+  if(characters.length < 1) {
+    return next(new Error('Movie without characters', 404))
+  }
 
   res.status(201).json({
     status: 'success',
